@@ -205,7 +205,6 @@ if uploaded_file:
         if show_ci and "hi-95" in compare_df.columns and "lo-95" in compare_df.columns:
             compare_fig.add_trace(go.Scatter(x=compare_df["ds"], y=compare_df["hi-95"], name=f"{model_name} Upper 95%", line=dict(width=0), showlegend=False))
             compare_fig.add_trace(go.Scatter(x=compare_df["ds"], y=compare_df["lo-95"], name=f"{model_name} Lower 95%", fill='tonexty', line=dict(width=0), fillcolor='rgba(255,127,14,0.15)', showlegend=False))
-            compare_fig.add_trace(go.Scatter(x=compare_df["ds"], y=compare_df["lo-95"], name=f"{model_name} Lower 95%", fill='tonexty', line=dict(width=0), fillcolor='rgba(255,127,14,0.15)', showlegend=False))
 
     compare_fig.add_trace(go.Scatter(x=all_bt["ds"], y=all_bt["y"], name="Actual", mode="lines+markers", line=dict(color="#1f77b4", dash="dot")))
     compare_fig.update_layout(title="Backtest Forecasts by Model", xaxis_title="Date", yaxis_title="Value")
