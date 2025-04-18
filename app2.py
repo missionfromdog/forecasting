@@ -2,7 +2,8 @@ import streamlit as st
 import pandas as pd
 from statsforecast import StatsForecast
 from statsforecast.models import (
-    AutoARIMA, Naive, SeasonalNaive, RandomWalkWithDrift, Theta
+    AutoARIMA, SeasonalNaive, RandomWalkWithDrift, Theta,
+    Holt, HoltWinters, HistoricAverage
 )
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 import numpy as np
@@ -147,13 +148,26 @@ if uploaded_file or gsheet_url:
     df = df.dropna()
     df["unique_id"] = "main_series"
 
-    models = [
-        AutoARIMA(),
-        Naive(),
-        SeasonalNaive(season_length=season_length),
-        RandomWalkWithDrift(),
-        Theta(),
-    ]
+    model_options = {
+        "AutoARIMA": (AutoARIMA(), "Auto-regressive integrated moving average (ARIMA) with automated parameter selection."),
+        "SeasonalNaive": (SeasonalNaive(season_length=season_length), "Repeats the value from the same season in the last cycle."),
+        "RandomWalkWithDrift": (RandomWalkWithDrift(), "A simple trend model assuming consistent changes over time."),
+        "Theta": (Theta(), "A modified simple exponential smoothing model good for both trend and seasonality."),
+        "Holt": (Holt(), "Double exponential smoothing — handles trend, not seasonality."),
+        "HoltWinters": (HoltWinters(season_length=season_length), "Triple exponential smoothing — handles both trend and seasonality."),        "HistoricAverage": (HistoricAverage(), "Uses the mean of all past observations to forecast.")
+    }
+
+    model_labels = {
+        key: f"{key} - {desc}" for key, (_, desc) in model_options.items()
+    }
+    selected_labels = st.multiselect(
+        "Select forecasting models to include:",
+        options=list(model_labels.values()),
+        default=list(model_labels.values())
+    )
+    selected_model_names = [k for k, v in model_labels.items() if v in selected_labels]
+
+    models = [model_options[name][0] for name in selected_model_names]
 
     valid_models = []
     backtest_dfs = []
