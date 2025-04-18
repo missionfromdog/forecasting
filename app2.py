@@ -91,6 +91,8 @@ The app ensembles several StatsForecast models, picks the best via backtesting, 
 
 uploaded_file = st.file_uploader("Upload your CSV file", type=["csv"])
 
+gsheet_url = st.text_input("Or enter a public Google Sheets URL")
+
 st.markdown("### <span id=\"settings\">Settings</span>", unsafe_allow_html=True)
 
 freq = st.selectbox(
@@ -109,9 +111,18 @@ season_length = season_length_map.get(freq, 12)
 
 st.markdown("### <span id=\"results\"></span>", unsafe_allow_html=True)
 
-# Load and process uploaded CSV
-if uploaded_file:
-    df = pd.read_csv(uploaded_file)
+# Load and process uploaded CSV or Google Sheet
+if uploaded_file or gsheet_url:
+    if uploaded_file:
+        df = pd.read_csv(uploaded_file)
+    elif gsheet_url:
+        try:
+            sheet_id = gsheet_url.split("/d/")[1].split("/")[0]
+            export_url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv"
+            df = pd.read_csv(export_url)
+        except Exception as e:
+            st.error("Failed to load Google Sheet. Ensure the URL is valid and the sheet is public.")
+            st.stop()
 
     # Auto-detect columns
     datetime_col = "ds"
