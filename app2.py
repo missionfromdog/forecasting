@@ -172,7 +172,6 @@ if uploaded_file:
             "MAPE": (abs((x["y"] - x["y_hat"]) / x["y"]).replace([np.inf, -np.inf], np.nan).dropna().mean()) * 100
         })
     )
-    )
 
     best_model_name = model_metrics["MAE"].idxmin()
     best_model = next((m for m in valid_models if m.__class__.__name__ == best_model_name), None)
