@@ -61,12 +61,10 @@ st.markdown(
             color: #ff924f;
         }
     </style>
-    <div class="adv-header">
-        <img src="https://www.youradv.com/wp-content/uploads/2024/11/advantage-meta.png" alt="ADV Logo" />
-        <div class="adv-header-text">
-            <h1>ADV Forecast Studio</h1>
-            <p>Upload. Analyze. Predict. Powered by StatsForecast.</p>
-        </div>
+    <div class="adv-header-text">
+    <h1>CH Forecast Studio</h1>
+    <p>Upload. Analyze. Predict. Powered by StatsForecast.</p>
+</div>
     </div>
     <div class="nav-bar">
         <a href="#upload">Upload</a>
