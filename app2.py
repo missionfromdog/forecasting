@@ -5,6 +5,7 @@ from statsforecast.models import (
     AutoARIMA, Naive, SeasonalNaive, RandomWalkWithDrift, Theta
 )
 from sklearn.metrics import mean_absolute_error, mean_squared_error
+import numpy as np
 import plotly.graph_objects as go
 from pandas import concat
 import traceback
@@ -168,8 +169,9 @@ if uploaded_file:
         lambda x: pd.Series({
             "MAE": mean_absolute_error(x["y"].astype(float), x["y_hat"].astype(float)),
             "RMSE": mean_squared_error(x["y"].astype(float), x["y_hat"].astype(float), squared=False),
-            "MAPE": (abs((x["y"] - x["y_hat"]) / x["y"]).replace([float('inf'), -float('inf')], float('nan')).dropna().mean()) * 100
+            "MAPE": (abs((x["y"] - x["y_hat"]) / x["y"]).replace([np.inf, -np.inf], np.nan).dropna().mean()) * 100
         })
+    )
     )
 
     best_model_name = model_metrics["MAE"].idxmin()
