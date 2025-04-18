@@ -166,8 +166,8 @@ if uploaded_file:
   
     model_metrics = all_bt.dropna(subset=["y", "y_hat"]).groupby("model").apply(
         lambda x: pd.Series({
-            "MAE": mean_absolute_error(x["y"], x["y_hat"]),
-            "RMSE": mean_squared_error(x["y"], x["y_hat"], squared=False),
+            "MAE": mean_absolute_error(x["y"].astype(float), x["y_hat"].astype(float)),
+            "RMSE": mean_squared_error(x["y"].astype(float), x["y_hat"].astype(float), squared=False),
             "MAPE": (abs((x["y"] - x["y_hat"]) / x["y"]).replace([float('inf'), -float('inf')], float('nan')).dropna().mean()) * 100
         })
     )
