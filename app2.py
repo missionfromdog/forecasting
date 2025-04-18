@@ -165,13 +165,13 @@ if uploaded_file:
     from sklearn.metrics import mean_absolute_error
     all_bt = pd.concat(backtest_dfs, ignore_index=True)
   
-    model_metrics = all_bt.dropna(subset=["y", "y_hat"]).groupby("model").apply(
+    model_metrics = all_bt.dropna(subset=["y", "y_hat"]).copy()
+    model_metrics = model_metrics.groupby("model").apply(lambda x: pd.Series({
         lambda x: pd.Series({
             "MAE": mean_absolute_error(x["y"].astype(float), x["y_hat"].astype(float)),
             "RMSE": mean_squared_error(x["y"].astype(float), x["y_hat"].astype(float), squared=False),
             "MAPE": (abs((x["y"] - x["y_hat"]) / x["y"]).replace([np.inf, -np.inf], np.nan).dropna().mean()) * 100
-        })
-    )
+    }))
 
     best_model_name = model_metrics["MAE"].idxmin()
     best_model = next((m for m in valid_models if m.__class__.__name__ == best_model_name), None)
